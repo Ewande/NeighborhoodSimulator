@@ -1,20 +1,77 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Function;
 
 /**
  * Created by augoff on 7/16/15.
  */
 public class SimGUI extends JFrame
 {
+    private World world;
+    private Function<Robot, String> labelFunction;
+
+    public SimGUI(World _world)
+    {
+        super("Simulator");
+        world = _world;
+        setLabelType(LabelType.NeighborsCount);
+        setContentPane(new WorldPanel());
+        setVisible(true);
+        pack();
+    }
+
+    public void updateDisplay()
+    {
+        setTitle("Simulator - step " + world.iteration);
+        repaint();
+    }
+
+    public void setLabelType(LabelType labelType)
+    {
+        switch (labelType)
+        {
+            case NeighborsCount:
+                labelFunction = robot -> Integer.toString(robot.neighbors.size());
+                break;
+
+            case Id:
+                labelFunction = robot -> Integer.toString(robot.id);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public enum LabelType
+    {
+        NeighborsCount,
+        Id
+    }
+
     public class WorldPanel extends JPanel
     {
-        World world;
 
-        public WorldPanel(World _world)
+        public WorldPanel()
         {
-            world = _world;
             setPreferredSize(new Dimension(Constants.WORLD_WIDTH * Constants.PRINTING_SCALE,
                     Constants.WORLD_HEIGHT * Constants.PRINTING_SCALE));
+        }
+
+
+        public Color getRobotColor(Robot robot)
+        {
+            switch (robot.role)
+            {
+                case Walker:
+                    return Color.RED;
+                case Beacon:
+                    return Color.BLUE;
+                case Nest:
+                    return Color.GREEN;
+                default:
+                    return Color.BLACK;
+            }
         }
 
         @Override
@@ -27,31 +84,12 @@ public class SimGUI extends JFrame
             {
                 int x = robot.x * Constants.PRINTING_SCALE;
                 int y = (Constants.WORLD_HEIGHT - robot.y - 1) * Constants.PRINTING_SCALE;
-                if(robot.role == Robot.RobotRole.Walker)
-                    g2d.setColor(Color.RED);
-                else if (robot.role == Robot.RobotRole.Beacon)
-                    g2d.setColor(Color.BLUE);
-                else if(robot.role == Robot.RobotRole.Nest)
-                    g2d.setColor(Color.GREEN);
+                g2d.setColor(getRobotColor(robot));
                 g2d.fillOval(x, y, Constants.PRINTING_SCALE, Constants.PRINTING_SCALE);
                 g2d.setColor(Color.BLACK);
                 g2d.drawOval(x, y, Constants.PRINTING_SCALE, Constants.PRINTING_SCALE);
-                g2d.drawString(robot.neighbors.size() + "", x, y);
-
+                g2d.drawString(labelFunction.apply(robot), x, y);
             }
         }
     }
-
-    public SimGUI(World world)
-    {
-        super("Simulator");
-        setContentPane(new WorldPanel(world));
-        setVisible(true);
-        pack();
-    }
-
-
-
-
-
 }

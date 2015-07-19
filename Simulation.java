@@ -29,11 +29,14 @@ public class Simulation implements KeyListener
         gui = new SimGUI(world);
 
         if(Constants.SIM_TYPE == Constants.SimType.Manual)
+        {
+            world.prepareMoves();
             gui.addKeyListener(this);
-
+        }
         else
             while(true)
             {
+                world.prepareMoves();
                 world.moveRobots();
                 gui.repaint();
 
@@ -51,19 +54,33 @@ public class Simulation implements KeyListener
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e)
     {
-        world.moveRobots();
-        gui.repaint();
+        int keyCode = e.getKeyCode();
+        switch (keyCode)
+        {
+            case KeyEvent.VK_I:
+                gui.setLabelType(SimGUI.LabelType.Id);
+                gui.updateDisplay();
+                break;
+
+            case KeyEvent.VK_N:
+                gui.setLabelType(SimGUI.LabelType.NeighborsCount);
+                gui.updateDisplay();
+                break;
+
+            default:
+                world.moveRobots();
+                world.prepareMoves();
+                gui.updateDisplay();
+                break;
+        }
+
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
+    public void keyReleased(KeyEvent e) {}
 }

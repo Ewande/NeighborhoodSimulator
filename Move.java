@@ -19,4 +19,9 @@ public class Move
         newY = _newY;
         newRole = _newRole;
     }
+
+    public static Move getIdle(Robot robot)
+    {
+        return new Move(robot.x, robot.y, robot.role);
+    }
 }

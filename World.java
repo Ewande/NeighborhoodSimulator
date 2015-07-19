@@ -7,12 +7,14 @@ import java.util.Random;
 public class World
 {
     LinkedList<Robot> robots;
+    int iteration;
     Robot[][] map;
 
     public World()
     {
         robots = new LinkedList<>();
         map = new Robot[Constants.WORLD_WIDTH][Constants.WORLD_HEIGHT];
+        iteration = 0;
     }
 
     public void addNest()
@@ -49,14 +51,23 @@ public class World
         }
     }
 
-    public void moveRobots()
+    public void prepareMoves()
     {
+        LinkedList<Robot> copyForSorting = new LinkedList<>(robots);
         for(Robot robot : robots)
         {
-            robot.updateNeighborhood(robots);
+            robot.updateNeighborhood(copyForSorting);
             robot.prepareMove();
         }
+    }
+
+    public void moveRobots()
+    {
+        boolean movesMade = true;
         for(Robot robot : robots)
-            robot.makeMove();
+            movesMade &= robot.makeMove();
+
+        if(movesMade)
+            iteration++;
     }
 }

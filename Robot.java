@@ -15,8 +15,8 @@ public class Robot
 
     int id;
     int x;
-    RobotRole role;
     int y;
+    RobotRole role;
     LinkedList<Neighbor> neighbors;
 
     Move preparedMove;
@@ -24,6 +24,8 @@ public class Robot
     public Robot(int _id)
     {
         id = _id;
+        x = 0;
+        y = 0;
         role = RobotRole.Walker;
         neighbors = new LinkedList<>();
     }
@@ -78,7 +80,12 @@ public class Robot
         {
             if(neighbors.size() >= Constants.BEACON_TO_WALKER_THRESHOLD)
                 preparedMove = createRandomWalkMove(RobotRole.Walker);
+            else
+                preparedMove = Move.getIdle(this);
         }
+        else if(role == RobotRole.Nest)
+            preparedMove = Move.getIdle(this);
+
     }
 
     public boolean makeMove()
