@@ -91,6 +91,17 @@ public class SimGUI extends JFrame
                 g2d.setColor(Color.BLACK);
                 g2d.drawOval(x, y, Constants.PRINTING_SCALE, Constants.PRINTING_SCALE);
                 g2d.drawString(labelFunction.apply(robot), x, y);
+                /*if(robot.id == 5)
+                {
+                    System.out.println("Role: " + robot.role);
+                    System.out.print("Neighbors: ");
+                    for (Neighbor n : robot.neighbors)
+                        System.out.print(n.robot.id + " ");
+                    System.out.println();
+                    int r = Constants.PRINTING_SCALE / 2;
+                    int radius = (int) (Constants.SENSOR_RANGE * Constants.PRINTING_SCALE * 2);
+                    g2d.drawOval((int) (x - radius / 2 + r) , (int)(y - radius / 2 + r), radius, radius);
+                }*/
             }
         }
     }

@@ -18,6 +18,7 @@ public class Constants
     public static final int WORLD_HEIGHT = 25;
     public static final int WORLD_WIDTH = 25;
     public static final int PRINTING_SCALE = 15;
+    public static final int ROBOTS_COUNT = 25;
 
     // nest
     public static final int NEST_X = 10;
@@ -29,4 +30,6 @@ public class Constants
     public static final int ROBOT_SPEED = 1;
     public static final int BEACON_TO_WALKER_THRESHOLD = 3;
     public static final int WALKER_TO_BEACON_THRESHOLD = 1;
+    public static final int NEIGHBORHOOD_MAX_SIZE = 6;
+    public static final int STOP_BEING_USELESS_TIME = 500;
 }

@@ -16,7 +16,7 @@ public class Simulation implements KeyListener
         World world = new World();
         world.addNest();
 
-        for(int i = 0; i < 15; i++)
+        for(int i = 0; i < Constants.ROBOTS_COUNT; i++)
             world.addToWorld(new Robot(i));
 
         world.shuffleRobotsAroundNest();
