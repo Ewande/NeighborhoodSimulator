@@ -25,6 +25,7 @@ public class Simulation implements KeyListener
 
     public void run()
     {
+        System.out.println("Starting simulation GUI...");
         world = createWorld();
         gui = new SimGUI(world);
 

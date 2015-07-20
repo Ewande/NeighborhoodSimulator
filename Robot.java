@@ -24,10 +24,21 @@ public class Robot
     public Robot(int _id)
     {
         id = _id;
-        x = 0;
-        y = 0;
+        x = -1;
+        y = -1;
         role = RobotRole.Walker;
         neighbors = new LinkedList<>();
+    }
+
+    public boolean setPosition(World world, int _x, int _y)
+    {
+        if(!world.isFieldFree(_x, _y))
+            return false;
+        int oldX = x, oldY = y;
+        x = _x;
+        y = _y;
+        world.updateRobotPosition(this, oldX, oldY);
+        return true;
     }
 
     private int bound(int min, int max, int value)
@@ -46,7 +57,7 @@ public class Robot
     {
         LinkedList<Neighbor> lastTimeNeighbors = neighbors;
         neighbors = new LinkedList<>();
-        robots.sort((Robot r1, Robot r2) -> (int) (getDistance(r1) - getDistance(r2)));
+        robots.sort((Robot r1, Robot r2) -> getDistance(r1) - getDistance(r2) > 0 ? 1 : -1);
         Neighbor temporary = new Neighbor(null);
         for(Robot robot : robots)
             if(neighbors.size() == 6 || getDistance(robot) > Constants.SENSOR_RANGE)
@@ -88,13 +99,11 @@ public class Robot
 
     }
 
-    public boolean makeMove()
+    public boolean makeMove(World world)
     {
         if(preparedMove == null)
             return false;
-
-        x = preparedMove.newX;
-        y = preparedMove.newY;
+        setPosition(world, preparedMove.newX, preparedMove.newY);
         role = preparedMove.newRole;
 
         preparedMove = null;

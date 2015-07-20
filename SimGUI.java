@@ -10,14 +10,16 @@ public class SimGUI extends JFrame
     private World world;
     private Function<Robot, String> labelFunction;
 
+
     public SimGUI(World _world)
     {
-        super("Simulator");
+        super("Simulator - prepared");
         world = _world;
         setLabelType(LabelType.NeighborsCount);
         setContentPane(new WorldPanel());
-        setVisible(true);
         pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     public void updateDisplay()

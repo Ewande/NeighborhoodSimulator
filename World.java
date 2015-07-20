@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -24,6 +25,7 @@ public class World
         nest.y = Constants.NEST_Y;
         nest.role = Robot.RobotRole.Nest;
         addToWorld(nest);
+        updateRobotPosition(nest, -1, -1);
     }
 
     public void addToWorld(Robot robot)
@@ -41,13 +43,40 @@ public class World
         }
     }
 
+    private boolean isFieldInBounds(int x, int y)
+    {
+        return x >= 0 && x < Constants.WORLD_WIDTH && y >= 0 && y < Constants.WORLD_HEIGHT;
+    }
+
+    public boolean isFieldFree(int x, int y)
+    {
+        return isFieldInBounds(x, y) && map[x][y] == null;
+    }
+
+    public void updateRobotPosition(Robot robot, int oldX, int oldY)
+    {
+        map[robot.x][robot.y] = robot;
+        if(isFieldInBounds(oldX, oldY))
+            map[oldX][oldY] = null;
+    }
+
     public void shuffleRobotsAroundNest()
     {
         Random random = new Random();
         for(Robot robot : robots)
         {
-            robot.x = Constants.NEST_X + random.nextInt(2 * Constants.SPREADING_RADIUS) - Constants.SPREADING_RADIUS;
-            robot.y = Constants.NEST_Y + random.nextInt(2 * Constants.SPREADING_RADIUS) - Constants.SPREADING_RADIUS;
+            if(robot.role != Robot.RobotRole.Nest)
+            {
+                int x = -1, y = -1, counter = 0;
+                while (counter < 100 && !robot.setPosition(this, x, y))
+                {
+                    counter++;
+                    x = Constants.NEST_X + random.nextInt(2 * Constants.SPREADING_RADIUS) - Constants.SPREADING_RADIUS;
+                    y = Constants.NEST_Y + random.nextInt(2 * Constants.SPREADING_RADIUS) - Constants.SPREADING_RADIUS;
+                }
+                if (counter == 100)
+                    System.out.println("No free space for robot with ID = " + robot.id);
+            }
         }
     }
 
@@ -63,9 +92,11 @@ public class World
 
     public void moveRobots()
     {
+        LinkedList<Robot> copy = new LinkedList<>(robots);
+        Collections.shuffle(copy);
         boolean movesMade = true;
-        for(Robot robot : robots)
-            movesMade &= robot.makeMove();
+        for(Robot robot : copy)
+            movesMade &= robot.makeMove(this);
 
         if(movesMade)
             iteration++;
