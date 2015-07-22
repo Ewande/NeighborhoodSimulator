@@ -21,6 +21,7 @@ public class Robot
     int noWalkerCounter;
 
     Move preparedMove;
+    Move lastMove;
 
     public Robot(int _id)
     {
@@ -28,6 +29,7 @@ public class Robot
         x = -1;
         y = -1;
         noWalkerCounter = 0;
+        lastMove = Move.getIdle(this);
         role = RobotRole.Walker;
         neighbors = new LinkedList<>();
     }
@@ -93,8 +95,13 @@ public class Robot
     {
         if(role == RobotRole.Walker)
         {
-            if(neighbors.size() <= Constants.WALKER_TO_BEACON_THRESHOLD)
-                preparedMove = new Move(x, y, RobotRole.Beacon);
+            if(neighbors.size() == 0)
+            {
+                preparedMove = lastMove.getReversed();
+                preparedMove.newRole = RobotRole.Beacon;
+            }
+            /*if(neighbors.size() <= Constants.WALKER_TO_BEACON_THRESHOLD)
+                preparedMove = new Move(this, x, y, RobotRole.Beacon);*/
             else
                 preparedMove = createRandomWalkMove(role);
         }
@@ -118,18 +125,17 @@ public class Robot
             return false;
         setPosition(world, preparedMove.newX, preparedMove.newY);
         role = preparedMove.newRole;
-
+        lastMove = preparedMove;
         preparedMove = null;
         return true;
     }
 
     public Move createRandomWalkMove(RobotRole newRole)
     {
-        Move move = new Move();
+        Move move = new Move(this, 0, 0, newRole);
         Random random = new Random();
         move.newX = bound(0, Constants.WORLD_WIDTH - 1, x + random.nextInt(2 * Constants.ROBOT_SPEED + 1) - Constants.ROBOT_SPEED);
         move.newY = bound(0, Constants.WORLD_HEIGHT - 1, y + random.nextInt(2 * Constants.ROBOT_SPEED + 1) - Constants.ROBOT_SPEED);
-        move.newRole = newRole;
         return move;
     }
 

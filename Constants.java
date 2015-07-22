@@ -15,14 +15,14 @@ public class Constants
     public static final int STEP_DURATION_MS = 1000;
 
     // world
-    public static final int WORLD_HEIGHT = 25;
-    public static final int WORLD_WIDTH = 25;
+    public static final int WORLD_HEIGHT = 35;
+    public static final int WORLD_WIDTH = 35;
     public static final int PRINTING_SCALE = 15;
     public static final int ROBOTS_COUNT = 25;
 
     // nest
-    public static final int NEST_X = 10;
-    public static final int NEST_Y = 10;
+    public static final int NEST_X = 15;
+    public static final int NEST_Y = 15;
     public static final int SPREADING_RADIUS = 5;
 
     // robots

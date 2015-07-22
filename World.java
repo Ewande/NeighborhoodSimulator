@@ -83,11 +83,13 @@ public class World
     public void prepareMoves()
     {
         LinkedList<Robot> copyForSorting = new LinkedList<>(robots);
-        for(Robot robot : robots)
+        robots.stream()
+                .filter(robot -> robot.preparedMove == null)
+                .forEach(robot ->
         {
             robot.updateNeighborhood(copyForSorting);
             robot.prepareMove();
-        }
+        });
     }
 
     public void moveRobots()
